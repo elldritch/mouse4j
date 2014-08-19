@@ -1,15 +1,12 @@
 chai = require 'chai'
 expect = chai.expect
 
-config = require 'config'
 Promise = require 'bluebird'
 
 neo4j = require 'neo4j'
-db = new neo4j.GraphDatabase
-  url: config.store.neo4j
+db = new neo4j.GraphDatabase process.env.NEO4J_URL or 'http://localhost:7474'
 
 TestPerson = require './person'
-Relation = require '../lib/orm/relation'
 
 describe 'models', ->
   before 'clear database of test users', (done) ->

@@ -1,94 +1,97 @@
 Promise = require 'bluebird'
-_ = require 'lodash'
+equal = require 'deep-equal'
 
-Neo4jObject = require './neo4j-object'
-Relation = require './relation'
+EntityFactory = (Neo4jObjectBase, RelationBase) ->
+  Neo4jObject = Neo4jObjectBase
+  Relation = RelationBase
 
-class Entity extends Neo4jObject
-  constructor: (@_node) ->
-    super @_node
-    @_createRelationshipFrom = Promise.promisify @_node.createRelationshipFrom
-      .bind @_node
-    @_createRelationshipTo = Promise.promisify @_node.createRelationshipTo
-      .bind @_node
+  class Entity extends Neo4jObject
+    constructor: (@_node) ->
+      super @_node
+      @_createRelationshipFrom = Promise.promisify @_node.createRelationshipFrom
+        .bind @_node
+      @_createRelationshipTo = Promise.promisify @_node.createRelationshipTo
+        .bind @_node
 
-  get_relation: (to, direction, type) ->
-    from = @id
+    get_relation: (to, direction, type) ->
+      from = @id
 
-    rel = ''
-    switch direction
-      when 'outgoing'
-        rel = "-[r:#{type}]->"
-      when 'incoming'
-        rel = "<-[r:#{type}]-"
-      else
-        rel = "-[r:#{type}]-"
-
-    query = "START a=node({from}), b=node({to})
-      MATCH (a) #{rel} (b)
-      RETURN r"
-
-    params =
-      from: from
-      to: to
-
-    Entity._query query, params
-      .then (res) ->
-        if res.length is 0
-          false
+      rel = ''
+      switch direction
+        when 'outgoing'
+          rel = "-[r:#{type}]->"
+        when 'incoming'
+          rel = "<-[r:#{type}]-"
         else
-          new Relation res[0]['r']
+          rel = "-[r:#{type}]-"
 
-  create_relation: (to, direction, type, data) ->
-    unless typeof to is 'number'
-      to = parseInt to
+      query = "START a=node({from}), b=node({to})
+        MATCH (a) #{rel} (b)
+        RETURN r"
 
-    toNode = null
+      params =
+        from: from
+        to: to
 
-    Entity.findById to
-      .then (item) =>
-        toNode = item._node
-        @get_relation to, direction, type
-      .then (rel) =>
-        if not rel
-          if direction is 'incoming'
-            @_createRelationshipFrom toNode, type, data
+      Entity._query query, params
+        .then (res) ->
+          if res.length is 0
+            false
           else
-            @_createRelationshipTo toNode, type, data
-        else if rel.data and not _.isEqual(data, rel.data)
-          rel = new Relation rel
-          rel.data = data
-          rel.save()
-        else
-          null
+            new Relation res[0]['r']
 
-  @_findById: Promise.promisify @_db.getNodeById
-    .bind @_db
-  @findById: (id) ->
-    @_findById id
-      .then (item) =>
-        new @ item
+    create_relation: (to, direction, type, data) ->
+      unless typeof to is 'number'
+        to = parseInt to
 
-  @findOne: (query, params) ->
-    @findAll query, params
-      .then (items) ->
-        items[0]
+      toNode = null
 
-  @findAll: (query = '', params) ->
-    @_query [
-        "MATCH (entity:#{@.name} #{query})"
-        'RETURN entity'
-      ].join('\n'), params
-      .then (items) =>
-        items.map (item) =>
-          new @ item['entity']
+      Entity.findById to
+        .then (item) =>
+          toNode = item._node
+          @get_relation to, direction, type
+        .then (rel) =>
+          if not rel
+            if direction is 'incoming'
+              @_createRelationshipFrom toNode, type, data
+            else
+              @_createRelationshipTo toNode, type, data
+          else if rel.data and not equal data, rel.data
+            rel = new Relation rel
+            rel.data = data
+            rel.save()
+          else
+            null
 
-  @create: (data) ->
-    @_query [
-        "CREATE (entity:#{@.name} {data})"
-        'RETURN entity'
-      ].join('\n'), data: data
-      .then (items) =>
-        new @ items[0]['entity']
+    @_findById: Promise.promisify @_db.getNodeById
+      .bind @_db
+    @findById: (id) ->
+      @_findById id
+        .then (item) =>
+          new @ item
 
-module.exports = Entity
+    @findOne: (query, params) ->
+      @findAll query, params
+        .then (items) ->
+          items[0]
+
+    @findAll: (query = '', params) ->
+      @_query [
+          "MATCH (entity:#{@.name} #{query})"
+          'RETURN entity'
+        ].join('\n'), params
+        .then (items) =>
+          items.map (item) =>
+            new @ item['entity']
+
+    @create: (data) ->
+      @_query [
+          "CREATE (entity:#{@.name} {data})"
+          'RETURN entity'
+        ].join('\n'), data: data
+        .then (items) =>
+          new @ items[0]['entity']
+
+  Entity
+
+module.exports = EntityFactory

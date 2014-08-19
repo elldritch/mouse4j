@@ -4,13 +4,18 @@ description: 'A light-weight Neo4j ORM that wraps native nodes and edges.'
 author:
   name: 'Leo Zhang'
 
-main: 'index.js'
+main: './dist'
 
 scripts:
+  cson: './node_modules/cson/bin/cson2json package.cson > package.json'
+
   prepublish: ''
+  test: 'mocha --compilers coffee:coffee-script/register --reporter spec'
 
 dependencies:
   bluebird: '*'
+  'deep-equal': '*'
+
   neo4j: '*'
 
 devDependencies:
@@ -19,3 +24,10 @@ devDependencies:
 
   mocha: '*'
   chai: '*'
+
+  grunt: '*'
+  'grunt-cli': '*'
+  'grunt-contrib-clean': '*'
+  'grunt-contrib-coffee': '*'
+  'grunt-cson': '*'
+  'grunt-npm-install': '*'
