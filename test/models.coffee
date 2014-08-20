@@ -70,22 +70,22 @@ describe 'models', ->
       .spread (bob, alice) ->
         from = bob
         to = alice
-        bob.get_relation alice.id, 'outgoing', 'eats_lunch_with'
+        bob.get_relation alice.id, 'eats_lunch_with', 'outgoing'
       .then (rel) ->
         expect(rel).to.equal false
       .then ->
-        from.create_relation to.id, 'outgoing', 'eats_lunch_with',
+        from.create_relation to.id, 'eats_lunch_with', 'outgoing',
           where: 'cafe'
           what: 'sammiches'
       .then ->
-        from.get_relation to.id, 'outgoing', 'eats_lunch_with'
+        from.get_relation to.id, 'eats_lunch_with', 'outgoing'
       .then (rel) ->
         expect(rel.get 'where').to.equal 'cafe'
         expect(rel.get 'what').to.equal 'sammiches'
         rel.set 'what', 'ramen'
         rel.save()
       .then ->
-        from.get_relation to.id, 'outgoing', 'eats_lunch_with'
+        from.get_relation to.id, 'eats_lunch_with', 'outgoing'
       .then (rel) ->
         expect(rel.get 'what').to.equal 'ramen'
 

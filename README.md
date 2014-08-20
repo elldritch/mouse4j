@@ -6,3 +6,4 @@ Mouse4j is a tiny Neo4j model library which is particularly useful for CoffeeScr
 * Unique key support
 * Computed field support
 * Validator support
+* Optionally use callbacks instead of promises
