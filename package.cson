@@ -1,5 +1,5 @@
 name: 'mouse4j'
-version: '0.1.0'
+version: '0.1.1'
 description: 'A light-weight Neo4j ORM that wraps native nodes and edges.'
 author:
   name: 'Leo Zhang'
@@ -7,9 +7,7 @@ author:
 main: './dist'
 
 scripts:
-  cson: './node_modules/cson/bin/cson2json package.cson > package.json'
-
-  prepublish: ''
+  prepublish: './node_modules/grunt-cli/bin/grunt'
   test: 'mocha --compilers coffee:coffee-script/register --reporter spec'
 
 dependencies:

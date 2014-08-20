@@ -1,5 +1,5 @@
-# Mouse
-Mouse is a tiny Neo4j model library which is particularly useful for CoffeeScript users.
+# Mouse4j
+Mouse4j is a tiny Neo4j model library which is particularly useful for CoffeeScript users.
 
 # TODO
 * Simple JavaScript extending
