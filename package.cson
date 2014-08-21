@@ -18,24 +18,23 @@ scripts:
   test: 'mocha --compilers coffee:coffee-script/register --reporter spec'
 
 dependencies:
-  bluebird: '*'
-  'deep-equal': '*'
+  bluebird: '>=2.3.0'
+  'deep-equal': '>=0.2.1'
 
-  neo4j: '*'
+  neo4j: '>=1.1.0'
 
 devDependencies:
-  'coffee-script': '*'
-  cson: '*'
+  'coffee-script': '>=1.7.1'
+  cson: '>=1.6.1'
 
-  mocha: '*'
-  chai: '*'
+  mocha: '>=1.21.4'
+  chai: '>=1.9.1'
 
-  grunt: '*'
-  'grunt-cli': '*'
-  'grunt-contrib-clean': '*'
-  'grunt-contrib-coffee': '*'
-  'grunt-cson': '*'
-  'grunt-npm-install': '*'
+  grunt: '>=0.4.5'
+  'grunt-cli': '>=0.1.13'
+  'grunt-contrib-clean': '>=0.6.0'
+  'grunt-contrib-coffee': '>=0.11.1'
+  'grunt-cson': '>=0.10.0'
 
 engines:
   npm: '>=0.10.31'

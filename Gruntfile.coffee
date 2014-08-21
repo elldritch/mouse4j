@@ -20,12 +20,7 @@ module.exports = (grunt) ->
 
 
   grunt.loadNpmTasks 'grunt-contrib-clean'
-
   grunt.loadNpmTasks 'grunt-cson'
-  grunt.loadNpmTasks 'grunt-npm-install'
-
   grunt.loadNpmTasks 'grunt-contrib-coffee'
 
-  grunt.registerTask 'default', ['clean', 'compile']
-  grunt.registerTask 'install', ['cson', 'npm-install']
-  grunt.registerTask 'compile', ['coffee']
+  grunt.registerTask 'default', ['clean', 'coffee']
