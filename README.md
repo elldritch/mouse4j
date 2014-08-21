@@ -8,7 +8,7 @@ Mouse4j is a tiny Neo4j model library which is particularly useful for CoffeeScr
 
 # Usage
 ```coffeescript
-{Entity: Entity, Relation: Relation} = require 'mouse4j'
+{Entity: Entity, Relation: Relation} = require('mouse4j') process.env.NEO4J_URL or 'http://localhost:7474'
 Promise = require 'bluebird'
 
 class Person extends Entity
@@ -19,22 +19,22 @@ Person.create
   name: 'Bob'
   birthday: 'Jan 1, 1970'
 .then (bob) ->
-  do_things bob
-
-Person.findOne '{name: "Bob"}'
-  .then (bob) ->
-    bob.birthday = 'Jan 2, 1970'
-    bob.save()
-  .then (bob) ->
-    Promise.resolve [
-        Person.create
-          name: 'Alice'
-          birthday: 'Jan 3, 1970'
-        bob
-      ]
-  .spread (alice, bob) ->
-    alice.create_relation bob.id, 'is friends with', 'both',
-      mutual_interests: 'neo4j'
+  console.log bob
+.then ->
+  Person.findOne '{name: "Bob"}'
+.then (bob) ->
+  bob.birthday = 'Jan 2, 1970'
+  bob.save()
+.then (bob) ->
+  Promise.resolve [
+    Person.create
+      name: 'Alice'
+      birthday: 'Jan 3, 1970'
+    bob
+  ]
+.spread (alice, bob) ->
+  alice.create_relation bob.id, 'is friends with', 'both',
+    mutual_interests: 'neo4j'
 ```
 
 # Documentation
