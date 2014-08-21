@@ -62,8 +62,7 @@ describe 'models', ->
     it 'gets and sets relations', ->
       from = null
       to = null
-      new Promise (resolve, reject) ->
-        resolve [
+      Promise.resolve [
           TestPerson.findOne '{name: "Bob"}'
           TestPerson.findOne '{name: "Alice"}'
         ]
